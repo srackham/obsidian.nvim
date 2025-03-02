@@ -40,9 +40,10 @@ own as well. You don’t necessarily need to use it alongside the Obsidian app.
 2. Features                                                *obsidian-features*
 
 ▶️ **Completion:** Ultra-fast, asynchronous autocompletion for note
-references and tags via nvim-cmp <https://github.com/hrsh7th/nvim-cmp>
-(triggered by typing `[[` for wiki links, `[` for markdown links, or `#` for
-tags), powered by `ripgrep` <https://github.com/BurntSushi/ripgrep>.
+references and tags via nvim-cmp <https://github.com/hrsh7th/nvim-cmp> or
+blink.cmp <https://github.com/Saghen/blink.cmp> (triggered by typing `[[` for
+wiki links, `[` for markdown links, or `#` for tags), powered by `ripgrep`
+<https://github.com/BurntSushi/ripgrep>.
 
 
 <https://github.com/epwalsh/obsidian.nvim/assets/8812459/90d5f218-06cd-4ebb-b00b-b59c2f5c3cc1>
@@ -246,6 +247,7 @@ dependencies that enhance the obsidian.nvim experience.
 **Completion:**
 
 - **[recommended]** hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>: for completion of note references.
+- blink.cmp <https://github.com/Saghen/blink.cmp> (new): for completion of note references.
 
 **Pickers:**
 
@@ -323,8 +325,10 @@ carefully and customize it to your needs:
     
       -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
       completion = {
-        -- Set to false to disable completion.
+        -- Enables completion using nvim_cmp
         nvim_cmp = true,
+        -- Enables completion using blink.cmp
+        blink = false,
         -- Trigger completion at 2 chars.
         min_chars = 2,
       },
@@ -684,9 +688,11 @@ plugin’s functionality on markdown files outside of your "fixed" vaults. See
 
 COMPLETION ~
 
-obsidian.nvim will set itself up as an nvim-cmp source automatically when you
-enter a markdown buffer within your vault directory, you do **not** need to
-specify this plugin as a cmp source manually.
+obsidian.nvim supports nvim_cmp and blink.cmp completion plugins.
+
+obsidian.nvim will set itself up automatically when you enter a markdown buffer
+within your vault directory, you do **not** need to specify this plugin as a
+cmp source manually.
 
 Note that in order to trigger completion for tags _within YAML frontmatter_ you
 still need to type the "#" at the start of the tag. obsidian.nvim will remove
