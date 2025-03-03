@@ -164,13 +164,13 @@ managers. The full set of |obsidian-plugin-dependencies| and
   stability) instead of `main`, be aware that the README on `main` may reference
   features that haven’t been released yet. For that reason I recommend viewing
   the README on the tag for the latest release
-  <https://github.com/epwalsh/obsidian.nvim/releases> instead of `main`.
+  <https://github.com/obsidian-nvim/obsidian.nvim/releases> instead of `main`.
 
 USING LAZY.NVIM ~
 
 >lua
     return {
-      "epwalsh/obsidian.nvim",
+      "obsidian-nvim/obsidian.nvim",
       version = "*",  -- recommended, use latest release instead of latest commit
       lazy = true,
       ft = "markdown",
@@ -210,7 +210,7 @@ USING PACKER.NVIM ~
 
 >lua
     use({
-      "epwalsh/obsidian.nvim",
+      "obsidian-nvim/obsidian.nvim",
       tag = "*",  -- recommended, use latest release instead of latest commit
       requires = {
         -- Required.
@@ -892,7 +892,7 @@ option to `nil` you’ll have to use `vim.NIL` there instead of the builtin Lua
 4. Contributing                                        *obsidian-contributing*
 
 Please read the CONTRIBUTING
-<https://github.com/epwalsh/obsidian.nvim/blob/main/.github/CONTRIBUTING.md>
+<https://github.com/obsidian-nvim/obsidian.nvim/blob/main/.github/CONTRIBUTING.md>
 guide before submitting a pull request.
 
 And if you’re feeling especially generous I always appreciate some coffee
