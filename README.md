@@ -1,6 +1,6 @@
 <h1 align="center">obsidian.nvim</h1>
-<div><h4 align="center"><a href="#setup">Setup</a> · <a href="#configuration-options">Configure</a> · <a href="#contributing">Contribute</a> · <a href="https://github.com/epwalsh/obsidian.nvim/discussions">Discuss</a></h4></div>
-<div align="center"><a href="https://github.com/epwalsh/obsidian.nvim/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/epwalsh/obsidian.nvim?style=for-the-badge&logo=starship&logoColor=D9E0EE&labelColor=302D41&&color=d9b3ff&include_prerelease&sort=semver" /></a> <a href="https://github.com/epwalsh/obsidian.nvim/pulse"><img alt="Last commit" src="https://img.shields.io/github/last-commit/epwalsh/obsidian.nvim?style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=302D41&color=9fdf9f"/></a> <a href="https://github.com/neovim/neovim/releases/latest"><img alt="Latest Neovim" src="https://img.shields.io/github/v/release/neovim/neovim?style=for-the-badge&logo=neovim&logoColor=D9E0EE&label=Neovim&labelColor=302D41&color=99d6ff&sort=semver" /></a> <a href="http://www.lua.org/"><img alt="Made with Lua" src="https://img.shields.io/badge/Built%20with%20Lua-grey?style=for-the-badge&logo=lua&logoColor=D9E0EE&label=Lua&labelColor=302D41&color=b3b3ff"></a> <a href="https://www.buymeacoffee.com/epwalsh"><img alt="Buy me a coffee" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-grey?style=for-the-badge&logo=buymeacoffee&logoColor=D9E0EE&label=Sponsor&labelColor=302D41&color=ffff99" /></a></div>
+<div><h4 align="center"><a href="#setup">Setup</a> · <a href="#configuration-options">Configure</a> · <a href="#contributing">Contribute</a> · <a href="https://github.com/obsidian-nvim/obsidian.nvim/discussions">Discuss</a></h4></div>
+<div align="center"><a href="https://github.com/obsidian-nvim/obsidian.nvim/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/obsidian-nvim/obsidian.nvim?style=for-the-badge&logo=starship&logoColor=D9E0EE&labelColor=302D41&&color=d9b3ff&include_prerelease&sort=semver" /></a> <a href="https://github.com/obsidian-nvim/obsidian.nvim/pulse"><img alt="Last commit" src="https://img.shields.io/github/last-commit/obsidian-nvim/obsidian.nvim?style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=302D41&color=9fdf9f"/></a> <a href="https://github.com/neovim/neovim/releases/latest"><img alt="Latest Neovim" src="https://img.shields.io/github/v/release/neovim/neovim?style=for-the-badge&logo=neovim&logoColor=D9E0EE&label=Neovim&labelColor=302D41&color=99d6ff&sort=semver" /></a> <a href="http://www.lua.org/"><img alt="Made with Lua" src="https://img.shields.io/badge/Built%20with%20Lua-grey?style=for-the-badge&logo=lua&logoColor=D9E0EE&label=Lua&labelColor=302D41&color=b3b3ff"></a> <a href="https://www.buymeacoffee.com/epwalsh"><img alt="Buy me a coffee" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-grey?style=for-the-badge&logo=buymeacoffee&logoColor=D9E0EE&label=Sponsor&labelColor=302D41&color=ffff99" /></a></div>
 <hr>
 
 A Neovim plugin for writing and navigating [Obsidian](https://obsidian.md) vaults, written in Lua.
@@ -116,13 +116,13 @@ Search functionality (e.g. via the `:ObsidianSearch` and `:ObsidianQuickSwitch` 
 To configure obsidian.nvim you just need to call `require("obsidian").setup({ ... })` with the desired options.
 Here are some examples using different plugin managers. The full set of [plugin dependencies](#plugin-dependencies) and [configuration options](#configuration-options) are listed below.
 
-> ⚠️ WARNING: if you install from the latest release (recommended for stability) instead of `main`, be aware that the README on `main` may reference features that haven't been released yet. For that reason I recommend viewing the README on the tag for the [latest release](https://github.com/epwalsh/obsidian.nvim/releases) instead of `main`.
+> ⚠️ WARNING: if you install from the latest release (recommended for stability) instead of `main`, be aware that the README on `main` may reference features that haven't been released yet. For that reason I recommend viewing the README on the tag for the [latest release](https://github.com/obsidian-nvim/obsidian.nvim/releases) instead of `main`.
 
 #### Using [`lazy.nvim`](https://github.com/folke/lazy.nvim)
 
 ```lua
 return {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   version = "*",  -- recommended, use latest release instead of latest commit
   lazy = true,
   ft = "markdown",
@@ -161,7 +161,7 @@ return {
 
 ```lua
 use({
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   tag = "*",  -- recommended, use latest release instead of latest commit
   requires = {
     -- Required.
@@ -774,7 +774,7 @@ And keep in mind that to reset a configuration option to `nil` you'll have to us
 
 ## Contributing
 
-Please read the [CONTRIBUTING](https://github.com/epwalsh/obsidian.nvim/blob/main/.github/CONTRIBUTING.md) guide before submitting a pull request.
+Please read the [CONTRIBUTING](https://github.com/obsidian-nvim/obsidian.nvim/blob/main/.github/CONTRIBUTING.md) guide before submitting a pull request.
 
 And if you're feeling especially generous I always appreciate some coffee funds! ❤️
 
