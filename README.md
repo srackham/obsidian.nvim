@@ -226,9 +226,14 @@ The only **required** plugin dependency is [plenary.nvim](https://github.com/nvi
 
 **Syntax highlighting:**
 
-- **[recommended]** [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter): for base markdown syntax highlighting.
-- [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
-- See [syntax highlighting](#syntax-highlighting) for more details.
+See [syntax highlighting](#syntax-highlighting) for more details.
+
+- For base syntax highlighting:
+  - **[recommended]** [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+  - [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
+- For additional syntax features:
+  - [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)
+  - [markview.nvim](https://github.com/OXY2DEV/markview.nvim)
 
 **Miscellaneous:**
 
