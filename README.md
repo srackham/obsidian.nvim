@@ -120,10 +120,12 @@ Here are some examples using different plugin managers. The full set of [plugin 
 
 #### Using [`lazy.nvim`](https://github.com/folke/lazy.nvim)
 
+<details><summary>Click for install snippet</summary>
+
 ```lua
 return {
   "obsidian-nvim/obsidian.nvim",
-  version = "*",  -- recommended, use latest release instead of latest commit
+  version = "*", -- recommended, use latest release instead of latest commit
   lazy = true,
   ft = "markdown",
   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
@@ -157,12 +159,28 @@ return {
 }
 ```
 
+</details>
+
+#### Using [`rocks.nvim`](https://github.com/nvim-neorocks/rocks.nvim)
+
+<details><summary>Click for install snippet</summary>
+
+```vim
+:Rocks install obsidian
+```
+
+</details>
+
 #### Using [`packer.nvim`](https://github.com/wbthomason/packer.nvim)
 
+It is not recommended because packer.nvim is currently unmaintained
+
+<details><summary>Click for install snippet</summary>
+
 ```lua
-use({
+use {
   "obsidian-nvim/obsidian.nvim",
-  tag = "*",  -- recommended, use latest release instead of latest commit
+  tag = "*", -- recommended, use latest release instead of latest commit
   requires = {
     -- Required.
     "nvim-lua/plenary.nvim",
@@ -170,7 +188,7 @@ use({
     -- see below for full list of optional dependencies 👇
   },
   config = function()
-    require("obsidian").setup({
+    require("obsidian").setup {
       workspaces = {
         {
           name = "personal",
@@ -183,10 +201,12 @@ use({
       },
 
       -- see below for full list of options 👇
-    })
+    }
   end,
-})
+}
 ```
+
+</details>
 
 ### Plugin dependencies
 
@@ -194,20 +214,26 @@ The only **required** plugin dependency is [plenary.nvim](https://github.com/nvi
 
 **Completion:**
 
-- **[recommended]** [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp): for completion of note references.
-- [blink.cmp](https://github.com/Saghen/blink.cmp) (new): for completion of note references.
+- **[recommended]** [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
+- [blink.cmp](https://github.com/Saghen/blink.cmp) (new)
 
 **Pickers:**
 
-- **[recommended]** [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim): for search and quick-switch functionality.
-- [Mini.Pick](https://github.com/echasnovski/mini.pick) from the mini.nvim library: an alternative to telescope for search and quick-switch functionality.
-- [ibhagwan/fzf-lua](https://github.com/ibhagwan/fzf-lua): another alternative to telescope for search and quick-switch functionality.
-- [Snacks.Picker](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md) from the snacks.nvim library: an alternative to mini and telescope for search and quick-switch functionality.
+- **[recommended]** [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+- [ibhagwan/fzf-lua](https://github.com/ibhagwan/fzf-lua)
+- [Mini.Pick](https://github.com/echasnovski/mini.pick) from the mini.nvim library
+- [Snacks.Picker](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md) from the snacks.nvim library
 
 **Syntax highlighting:**
 
-- **[recommended]** [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter): for base markdown syntax highlighting. See [syntax highlighting](#syntax-highlighting) for more details.
-- [preservim/vim-markdown](https://github.com/preservim/vim-markdown): an alternative to nvim-treesitter for syntax highlighting (see [syntax highlighting](#syntax-highlighting) for more details), plus other cool features.
+See [syntax highlighting](#syntax-highlighting) for more details.
+
+- For base syntax highlighting:
+  - **[recommended]** [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+  - [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
+- For additional syntax features:
+  - [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)
+  - [markview.nvim](https://github.com/OXY2DEV/markview.nvim)
 
 **Miscellaneous:**
 
@@ -217,7 +243,7 @@ If you choose to use any of these you should include them in the "dependencies" 
 
 ### Configuration options
 
-This is a complete list of all of the options that can be passed to `require("obsidian").setup()`. The settings below are *not necessarily the defaults, but represent reasonable default settings*. Please read each option carefully and customize it to your needs:
+This is a complete list of all of the options that can be passed to `require("obsidian").setup()`. The settings below are _not necessarily the defaults, but represent reasonable default settings_. Please read each option carefully and customize it to your needs:
 
 ```lua
 {
@@ -564,7 +590,7 @@ config = {
       name = "personal",
       path = "~/vaults/personal",
     },
-  }
+  },
 }
 ```
 
@@ -591,12 +617,11 @@ config = {
         -- ...
       },
     },
-  }
+  },
 }
 ```
 
 obsidian.nvim also supports "dynamic" workspaces. These are simply workspaces where the `path` is set to a Lua function (that returns a path) instead of a hard-coded path. This can be useful in several scenarios, such as when you want a workspace whose `path` is always set to the parent directory of the current buffer:
-
 
 ```lua
 config = {
@@ -607,7 +632,7 @@ config = {
         return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
       end,
     },
-  }
+  },
 }
 ```
 
@@ -627,12 +652,12 @@ Note that in order to trigger completion for tags _within YAML frontmatter_ you 
 If you're using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter/blob/master/README.md) you're configuration should include both "markdown" and "markdown_inline" sources:
 
 ```lua
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter.configs").setup {
   ensure_installed = { "markdown", "markdown_inline", ... },
   highlight = {
     enable = true,
   },
-})
+}
 ```
 
 If you use `vim-markdown` you'll probably want to disable its frontmatter syntax highlighting (`vim.g.vim_markdown_frontmatter = 1`) which I've found doesn't work very well.
@@ -734,7 +759,7 @@ templates = {
 
 ### Usage outside of a workspace or vault
 
-It's possible to configure obsidian.nvim to work on individual markdown files outside of a regular workspace / Obsidian vault by configuring a "dynamic" workspace. To do so you just need to add a special workspace with a function for the `path` field (instead of a string), which should return a *parent* directory of the current buffer. This tells obsidian.nvim to use that directory as the workspace `path` and `root` (vault root) when the buffer is not located inside another fixed workspace.
+It's possible to configure obsidian.nvim to work on individual markdown files outside of a regular workspace / Obsidian vault by configuring a "dynamic" workspace. To do so you just need to add a special workspace with a function for the `path` field (instead of a string), which should return a _parent_ directory of the current buffer. This tells obsidian.nvim to use that directory as the workspace `path` and `root` (vault root) when the buffer is not located inside another fixed workspace.
 
 For example, to extend the configuration above this way:
 

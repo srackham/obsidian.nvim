@@ -125,7 +125,8 @@ Client.set_workspace = function(self, workspace, opts)
   self.callback_manager = CallbackManager.new(self, self.opts.callbacks)
 
   -- Setup UI add-ons.
-  if self.opts.ui.enable then
+  local has_no_renderer = not (util.get_plugin_info "render-markdown.nvim" or util.get_plugin_info "markview.nvim")
+  if has_no_renderer and self.opts.ui.enable then
     require("obsidian.ui").setup(self.current_workspace, self.opts.ui)
   end
 

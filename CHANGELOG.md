@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed `opts.image_name_func` to `opts.attachments.img_name_func`.
+- Default to not activate ui render when `render-markdown.nvim` or `markview.nvim` is present
 
 ### Fixed
 
