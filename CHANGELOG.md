@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an edge case with collecting backlinks.
 - Fixed typo in `ObsidianPasteImg`'s command description
 - Fixed the case when `opts.attachments` is `nil`.
+- Fixed bug where `ObsidianNewFromTemplate` did not respect `note_id_func`
 
 ## [v3.9.0](https://github.com/epwalsh/obsidian.nvim/releases/tag/v3.9.0) - 2024-07-11
 
@@ -191,6 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v3.7.0](https://github.com/epwalsh/obsidian.nvim/releases/tag/v3.7.0) - 2024-03-08
 
 There's a lot of new features and improvements here that I'm really excited about 🥳 They've improved my workflow a ton and I hope they do for you too. To highlight the 3 biggest additions:
+
 1. 🔗 Full support for header anchor links and block links! That means both for following links and completion of links. Various forms of anchor/block links are support. Here are a few examples:
     - Typical Obsidian-style wiki links, e.g. `[[My note#Heading 1]]`, `[[My note#Heading 1#Sub heading]]`, `[[My note#^block-123]]`.
     - Wiki links with a label, e.g. `[[my-note#heading-1|Heading 1 in My Note]]`.
@@ -199,7 +201,7 @@ There's a lot of new features and improvements here that I'm really excited abou
     We also support links to headers within the same note, like for a table of contents, e.g. `[[#Heading 1]]`, `[[#heading-1|Heading]]`, `[[#^block-1]]`.
 
 2. 📲 A basic callback system to let you easily customize obisidian.nvim's behavior even more. There are currently 4 events: `post_setup`, `enter_note`, `pre_write_note`, and `post_set_workspace`. You can define a function for each of these in your config.
-3. 🔭 Improved picker integrations (especially for telescope), particular for the `:ObsidianTags` command. See https://github.com/epwalsh/obsidian.nvim/discussions/450 for a demo.
+3. 🔭 Improved picker integrations (especially for telescope), particular for the `:ObsidianTags` command. See <https://github.com/epwalsh/obsidian.nvim/discussions/450> for a demo.
 
 Full changelog below 👇
 
@@ -439,7 +441,7 @@ Minor internal improvements.
 
 ### Fixed
 
-- Fixed parsing header with trailing whitespace (https://github.com/epwalsh/obsidian.nvim/issues/341#issuecomment-1925445271).
+- Fixed parsing header with trailing whitespace (<https://github.com/epwalsh/obsidian.nvim/issues/341#issuecomment-1925445271>).
 
 ## [v2.9.0](https://github.com/epwalsh/obsidian.nvim/releases/tag/v2.9.0) - 2024-01-31
 
@@ -469,7 +471,7 @@ Minor internal improvements.
 ### Fixed
 
 - Fixed a YAML parsing issue with unquoted URLs in an array item.
-- Fixed an issue on Windows when cloning a template into a new note. The root cause was this bug in plenary: https://github.com/nvim-lua/plenary.nvim/issues/489. We've added a work-around.
+- Fixed an issue on Windows when cloning a template into a new note. The root cause was this bug in plenary: <https://github.com/nvim-lua/plenary.nvim/issues/489>. We've added a work-around.
 
 ## [v2.7.1](https://github.com/epwalsh/obsidian.nvim/releases/tag/v2.7.1) - 2024-01-23
 
@@ -799,6 +801,7 @@ Major internal refactoring to bring performance improvements through async execu
 - Added `mappings` configuration field.
 - Added `open_notes_in` configuration field
 - Added `backlinks` options to the config. The default is
+
   ```lua
   backlinks = {
     -- The default height of the backlinks pane.
@@ -900,7 +903,7 @@ Major internal refactoring to bring performance improvements through async execu
 ### Added
 
 - Added support for [fzf-lua](https://github.com/ibhagwan/fzf-lua) as one of the possible fallbacks for the `:ObsidianQuickSwitch` command.
-- Added `:ObsidianQuickSwitch` to fuzzy-find a note by name in telescope/fzf _a la_ <C-O> in Obsidian.
+- Added `:ObsidianQuickSwitch` to fuzzy-find a note by name in telescope/fzf *a la* <C-O> in Obsidian.
 - Added support for [fzf-lua](https://github.com/ibhagwan/fzf-lua) as one of the possible fallbacks for the `:ObsidianSearch` command.
 - Added `:ObsidianFollowLink` and companion function `util.cursor_on_markdown_link`
 - Added `:ObsidianLink` and `:ObsidianLinkNew` commands.
