@@ -180,6 +180,10 @@ managers. The full set of |obsidian-plugin-dependencies| and
   the README on the tag for the latest release
   <https://github.com/obsidian-nvim/obsidian.nvim/releases> instead of `main`.
 
+  [!NOTE] To see you installation status, run `:checkhealth obsidian` To try out
+  or debug this plugin, use `minimal.lua` in the repo to run a clean instance of
+  obsidian.nvim
+
 USING LAZY.NVIM ~
 
 Click for install snippet ~
