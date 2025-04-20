@@ -931,7 +931,7 @@ option to `nil` you’ll have to use `vim.NIL` there instead of the builtin Lua
 5. Contributing                                        *obsidian-contributing*
 
 Please read the CONTRIBUTING
-<https://github.com/obsidian-nvim/obsidian.nvim/blob/main/.github/CONTRIBUTING.md>
+<https://github.com/obsidian-nvim/obsidian.nvim/blob/main/CONTRIBUTING.md>
 guide before submitting a pull request.
 
 
