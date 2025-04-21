@@ -564,11 +564,11 @@ This is a complete list of all of the options that can be passed to `require("ob
     -- You can always override this per image by passing a full path to the command instead of just a filename.
     img_folder = "assets/imgs",  -- This is the default
 
-    -- Optional, customize the default name or prefix when pasting images via `:ObsidianPasteImg`.
+    -- A function that determines default name or prefix when pasting images via `:ObsidianPasteImg`.
     ---@return string
     img_name_func = function()
       -- Prefix image names with timestamp.
-      return string.format("%s-", os.time())
+      return string.format("Pasted image %s", os.date "%Y%m%d%H%M%S")
     end,
 
     -- A function that determines the text to insert in the note when pasting an image.
