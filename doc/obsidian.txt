@@ -54,6 +54,8 @@ to another note.
 
 📷 **Images:** Paste images into notes.
 
+📈 **Status:** See note status in statusline like obsidian app.
+
 💅 **Syntax:** Additional markdown syntax highlighting, concealing, and
 extmarks for references, tags, and check-boxes.
 
@@ -628,6 +630,12 @@ Click to see configuration options ~
           path = client:vault_relative_path(path) or path
           return string.format("![%s](%s)", path.name, path)
         end,
+      },
+    
+      -- See https://github.com/obsidian-nvim/obsidian.nvim/wiki/Notes-on-configuration#statusline-component
+      statusline = {
+        enabled = true,
+        format = "{{properties}} properties {{backlinks}} backlinks {{words}} words {{chars}} chars",
       },
     }
 <
