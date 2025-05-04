@@ -299,6 +299,7 @@ config.LinkStyle = {
 ---@field nvim_cmp boolean
 ---@field blink boolean
 ---@field min_chars integer
+---@field match_case boolean
 config.CompletionOpts = {}
 
 --- Get defaults.
@@ -309,6 +310,7 @@ config.CompletionOpts.default = function()
   return {
     nvim_cmp = has_nvim_cmp,
     min_chars = 2,
+    match_case = true,
   }
 end
 

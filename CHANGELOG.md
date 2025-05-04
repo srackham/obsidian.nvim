@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support `text/uri-list` to `ObsidianPasteImg`.
 - Added support for obsidian style `%%` comment.
 - Added `opts.daily_notes.workdays_only` option which, when false, adds support for weekend daily notes.
+- Added configuration option `completion.match_case`, allowing removal of duplicates when note case does not match search string case. Defaults to true for non-breaking behavior.
 
 ### Changed
 
@@ -50,7 +51,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default to not activate ui render when `render-markdown.nvim` or `markview.nvim` is present
 - `smart_action` shows picker for tags (`ObsidianTag`) when cursor is on a tag
 - `ObsidianToggleCheckbox` now works with numbered lists
+
 - # `Makefile` is friendlier: self-documenting and automatically gets dependencies
+
 - Default to not activate ui render when `render-markdown.nvim` or `markview.nvim` is present.
 
 ### Fixed
