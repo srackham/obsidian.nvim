@@ -97,8 +97,10 @@ COMMANDS                                                   *obsidian-commands*
     window.
 - `:Obsidian new [TITLE]` to create a new note. One optional argument: the title
     of the new note.
-- `:Obsidian new_from_template [TITLE]` to create a new note from a template in
-    the templates folder. Selecting from a list using your preferred picker.
+- `:Obsidian new_from_template [TITLE] [TEMPLATE]` to create a new note with
+    `TITLE` from a template with the name `TEMPLATE`. Both arguments are optional.
+    If not given, the template will be selected from a list using your preferred
+    picker.
 - `:Obsidian open [QUERY]` to open a note in the Obsidian app. One optional
     argument: a query used to resolve the note to open by ID, path, or alias. If
     not given, the current buffer is used.
