@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [v3.11.0](https://github.com/obsidian-nvim/obsidian.nvim/releases/tag/v3.11.0) - 2025-05-04
+
 ## [vhe 'legacy_commands' config option is deprecated and will be removed in a future update.v3.11.0](https://github.com/obsidian-nvim/obsidian.nvim/releases/tag/vhe 'legacy_commands' config option is deprecated and will be removed in a future update.v3.11.0) - 2025-05-04
 
 ### Added
