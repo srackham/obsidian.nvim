@@ -17,6 +17,10 @@
 <a href="https://dotfyle.com/plugins/obsidian-nvim/obsidian.nvim">
  <img src="https://dotfyle.com/plugins/obsidian-nvim/obsidian.nvim/shield?style=for-the-badge" />
 </a>
+<a href="https://github.com/obsidian-nvim/obsidian.nvim?tab=readme-ov-file#-contributing">
+ <img src="https://img.shields.io/github/all-contributors/obsidian-nvim/obsidian.nvim?style=for-the-badge
+" />
+</a>
 </div>
 <hr>
 
@@ -52,7 +56,7 @@ The fork aims to stay close to the original, but fix bugs, include and merge use
 
 [![See this screenshot](https://github.com/epwalsh/obsidian.nvim/assets/8812459/e74f5267-21b5-49bc-a3bb-3b9db5fa6687)](https://github.com/epwalsh/obsidian.nvim/assets/8812459/e74f5267-21b5-49bc-a3bb-3b9db5fa6687)
 
-## Keymaps
+### Keymaps
 
 These default keymaps will only be set if you are in a valid workspace and a markdown buffer:
 
@@ -612,6 +616,15 @@ See the [obsidian.nvim wiki](https://github.com/obsidian-nvim/obsidian.nvim/wiki
 ## 🤝 Contributing
 
 Please read the [CONTRIBUTING](https://github.com/obsidian-nvim/obsidian.nvim/blob/main/CONTRIBUTING.md) guide before submitting a pull request.
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## ❤️ Acknowledgement
 
