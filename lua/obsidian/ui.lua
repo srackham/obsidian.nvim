@@ -3,7 +3,7 @@ local util = require "obsidian.util"
 local log = require "obsidian.log"
 local search = require "obsidian.search"
 local DefaultTbl = require("obsidian.collections").DefaultTbl
-local iter = require("obsidian.itertools").iter
+local iter = vim.iter
 
 local M = {}
 
