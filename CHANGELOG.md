@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `makefile types` target to check types via lua-ls
+
 ### Changed
 
 - Remove `itertools.lua` in favor of `vim.iter`
