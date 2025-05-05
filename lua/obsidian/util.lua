@@ -212,10 +212,6 @@ util.match_case = function(prefix, key)
   return table.concat(out_chars, "")
 end
 
-util.escape_magic_characters = function(text)
-  return text:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
-end
-
 ---Check if a string is a checkbox list item
 ---
 ---Supported checboox lists:
@@ -584,7 +580,7 @@ util.toggle_checkbox = function(opts, line_num)
 
   if util.is_checkbox(line) then
     for i, check_char in ipairs(checkboxes) do
-      if string.match(line, "^.* %[" .. util.escape_magic_characters(check_char) .. "%].*") then
+      if string.match(line, "^.* %[" .. vim.pesc(check_char) .. "%].*") then
         i = i % #checkboxes
         line = util.string_replace(line, "[" .. check_char .. "]", "[" .. checkboxes[i + 1] .. "]", 1)
         break
