@@ -18,8 +18,7 @@
  <img src="https://dotfyle.com/plugins/obsidian-nvim/obsidian.nvim/shield?style=for-the-badge" />
 </a>
 <a href="https://github.com/obsidian-nvim/obsidian.nvim?tab=readme-ov-file#-contributing">
- <img src="https://img.shields.io/github/all-contributors/obsidian-nvim/obsidian.nvim?style=for-the-badge
-" />
+ <img src="https://img.shields.io/github/all-contributors/obsidian-nvim/obsidian.nvim?style=for-the-badge" />
 </a>
 </div>
 <hr>
