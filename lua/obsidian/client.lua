@@ -136,6 +136,10 @@ Client.set_workspace = function(self, workspace, opts)
   end
 
   self.callback_manager:post_set_workspace(workspace)
+  vim.api.nvim_exec_autocmds("User", {
+    pattern = "ObsidianWorkpspaceSet",
+    data = { workspace = workspace },
+  })
 end
 
 --- Get the normalize opts for a given workspace.
