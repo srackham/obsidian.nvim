@@ -73,7 +73,7 @@ These default keymaps will only be set if you are in a valid workspace and a mar
 
 - `:Obsidian dailies [OFFSET ...]` to open a picker list of daily notes. For example, `:Obsidian dailies -2 1` to list daily notes from 2 days ago until tomorrow.
 
-- `:ObsidianExtractNote [TITLE]` to extract the visually selected text into a new note and link to it.
+- `:Obsidian extract_note [TITLE]` to extract the visually selected text into a new note and link to it.
 
 - `:Obsidian follow_link [vsplit|hsplit]` to follow a note reference under the cursor, optionally opening it in a vertical or horizontal split.
 
