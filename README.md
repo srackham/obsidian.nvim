@@ -1,7 +1,5 @@
 <h1 align="center">obsidian.nvim</h1>
 
-<div><h4 align="center"><a href="#setup">Setup</a> · <a href="#configuration-options">Configure</a> · <a href="#contributing">Contribute</a> · <a href="https://github.com/obsidian-nvim/obsidian.nvim/discussions">Discuss</a></h4></div>
-
 <div align="center">
 <a href="https://github.com/obsidian-nvim/obsidian.nvim/releases/latest">
   <img alt="Latest release" src="https://img.shields.io/github/v/release/obsidian-nvim/obsidian.nvim?style=for-the-badge&logo=starship&logoColor=D9E0EE&labelColor=302D41&&color=d9b3ff&include_prerelease&sort=semver" />
@@ -19,6 +17,9 @@
 </a>
 <a href="https://github.com/obsidian-nvim/obsidian.nvim?tab=readme-ov-file#-contributing">
  <img src="https://img.shields.io/github/all-contributors/obsidian-nvim/obsidian.nvim?style=for-the-badge" />
+</a>
+<a href="https://github.com/orgs/obsidian-nvim/discussions">
+ <img alt="GitHub Discussions" src="https://img.shields.io/github/discussions/obsidian-nvim/obsidian.nvim?style=for-the-badge">
 </a>
 </div>
 <hr>
