@@ -1,4 +1,0 @@
-- AsyncExecuter
-  - find_notes_async
-  - find_tags_async
-  - find_backlinks_async
