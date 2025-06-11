@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `open` module for `Obsidian open` related options.
 - Added autocmd events for user scripting, see [wiki](https://github.com/obsidian-nvim/obsidian.nvim/wiki/Autocmds).
 - Added `opts.ui.ignore_conceal_warn` option to ignore conceal-related warnings.
+- Added `vsplit_force` and `hsplit_force` open strategies. These will always open a vertical/horizontal split if the file is not already in the adjacent split.
 
 ### Changed
 
