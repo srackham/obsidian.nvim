@@ -1843,7 +1843,14 @@ Client.write_note = function(self, note, opts)
   else
     verb = "Created"
     if opts.template ~= nil then
-      note = clone_template { template_name = opts.template, path = path, client = self, note = note }
+      note = clone_template {
+        type = "clone_template",
+        template_name = opts.template,
+        destination_path = path,
+        template_opts = self.opts.templates,
+        templates_dir = assert(self:templates_dir(), "Templates folder is not defined or does not exist"),
+        partial_note = note,
+      }
     end
   end
 
@@ -1880,10 +1887,12 @@ Client.write_note_to_buffer = function(self, note, opts)
 
   if opts.template and util.buffer_is_empty(opts.bufnr) then
     note = insert_template {
-      note = note,
+      type = "insert_template",
       template_name = opts.template,
-      client = self,
+      template_opts = self.opts.templates,
+      templates_dir = assert(self:templates_dir(), "Templates folder is not defined or does not exist"),
       location = util.get_active_window_cursor_location(),
+      partial_note = note,
     }
   end
 

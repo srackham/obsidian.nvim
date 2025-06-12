@@ -655,7 +655,7 @@ util.working_day_after = function(time)
   end
 end
 
----@return table - tuple containing {bufnr, winnr, row, col}
+---@return [number, number, number, number] tuple containing { buf, win, row, col }
 util.get_active_window_cursor_location = function()
   local buf = vim.api.nvim_win_get_buf(0)
   local win = vim.api.nvim_get_current_win()
