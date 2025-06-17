@@ -347,7 +347,7 @@ Client._prepare_search_opts = function(self, opts, additional_opts)
   end
 
   if not opts.include_templates and self.opts.templates ~= nil and self.opts.templates.folder ~= nil then
-    search_opts:add_exclude(tostring(self.opts.templates.folder))
+    search.SearchOpts.add_exclude(search_opts, tostring(self.opts.templates.folder))
   end
 
   if opts.ignore_case then
