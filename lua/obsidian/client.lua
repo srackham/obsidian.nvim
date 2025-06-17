@@ -24,33 +24,12 @@ local block_on = require("obsidian.async").block_on
 local iter = vim.iter
 local uv = vim.uv
 
----@class obsidian.SearchOpts : obsidian.ABC
+---@class obsidian.SearchOpts
 ---
 ---@field sort boolean|?
 ---@field include_templates boolean|?
 ---@field ignore_case boolean|?
-local SearchOpts = abc.new_class {
-  __tostring = function(self)
-    return string.format("SearchOpts(%s)", vim.inspect(self:as_tbl()))
-  end,
-}
-
----@param opts obsidian.SearchOpts|table<string, any>
----
----@return obsidian.SearchOpts
-SearchOpts.from_tbl = function(opts)
-  setmetatable(opts, SearchOpts.mt)
-  return opts
-end
-
----@return obsidian.SearchOpts
-SearchOpts.default = function()
-  return SearchOpts.from_tbl {
-    sort = false,
-    include_templates = false,
-    ignore_case = false,
-  }
-end
+---@field default function?
 
 --- The Obsidian client is the main API for programmatically interacting with obsidian.nvim's features
 --- in Lua. To get the client instance, run:
@@ -324,12 +303,12 @@ end
 --- Get the default search options.
 ---
 ---@return obsidian.SearchOpts
-Client.search_defaults = function(self)
-  local opts = SearchOpts.default()
-  if opts.sort and self.opts.sort_by == nil then
-    opts.sort = false
-  end
-  return opts
+Client.search_defaults = function()
+  return {
+    sort = false,
+    include_templates = false,
+    ignore_case = false,
+  }
 end
 
 ---@param opts obsidian.SearchOpts|boolean|?
@@ -340,11 +319,9 @@ end
 Client._search_opts_from_arg = function(self, opts)
   if opts == nil then
     opts = self:search_defaults()
-  elseif type(opts) == "table" then
-    opts = SearchOpts.from_tbl(opts)
   elseif type(opts) == "boolean" then
     local sort = opts
-    opts = SearchOpts.default()
+    opts = self:search_defaults()
     opts.sort = sort
   else
     error("unexpected type for SearchOpts: '" .. type(opts) .. "'")
@@ -361,7 +338,7 @@ end
 Client._prepare_search_opts = function(self, opts, additional_opts)
   opts = self:_search_opts_from_arg(opts)
 
-  local search_opts = search.SearchOpts.default()
+  local search_opts = {}
 
   if opts.sort then
     search_opts.sort_by = self.opts.sort_by
@@ -377,7 +354,7 @@ Client._prepare_search_opts = function(self, opts, additional_opts)
   end
 
   if additional_opts ~= nil then
-    search_opts = search_opts:merge(additional_opts)
+    search_opts = search.SearchOpts.merge(search_opts, additional_opts)
   end
 
   return search_opts
@@ -581,7 +558,7 @@ Client.find_files_async = function(self, term, callback, opts)
   end
 
   local find_opts = self:_prepare_search_opts(opts.search)
-  find_opts:add_exclude "*.md"
+  search.SearchOpts.add_exclude(find_opts, "*.md")
   find_opts.include_non_markdown = true
 
   search.find_async(self.dir, term, find_opts, on_find_match, on_exit)
@@ -2105,7 +2082,7 @@ Client.statusline = function(self)
     self:find_backlinks_async(
       note,
       vim.schedule_wrap(function(backlinks)
-        local format = self.opts.statusline.format
+        local format = assert(self.opts.statusline.format)
         local wc = vim.fn.wordcount()
         local info = {
           words = wc.words,

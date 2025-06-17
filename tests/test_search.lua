@@ -1,6 +1,5 @@
 local search = require "obsidian.search"
 local RefTypes = search.RefTypes
-local SearchOpts = search.SearchOpts
 local Patterns = search.Patterns
 
 describe("search.find_async", function()
@@ -94,38 +93,6 @@ describe("search.replace_refs()", function()
     MiniTest.expect.equality(search.replace_refs "Hi there [[Bar]]", "Hi there Bar")
     MiniTest.expect.equality(search.replace_refs "Hi there [Bar](foo)", "Hi there Bar")
     MiniTest.expect.equality(search.replace_refs "Hi there [[foo|Bar]] [[Baz]]", "Hi there Bar Baz")
-  end)
-end)
-
-describe("search.SearchOpts", function()
-  it("should initialize from a raw table and resolve to ripgrep options", function()
-    local opts = SearchOpts.from_tbl {
-      sort_by = "modified",
-      fixed_strings = true,
-      ignore_case = true,
-      exclude = { "templates" },
-      max_count_per_file = 1,
-    }
-    MiniTest.expect.equality(
-      opts:to_ripgrep_opts(),
-      { "--sortr=modified", "--fixed-strings", "--ignore-case", "-g!templates", "-m=1" }
-    )
-  end)
-
-  it("should not include any options with defaults", function()
-    local opts = SearchOpts.from_tbl {}
-    MiniTest.expect.equality(opts:to_ripgrep_opts(), {})
-  end)
-
-  it("should initialize from another SearchOpts instance", function()
-    local opts = SearchOpts.from_tbl(SearchOpts.from_tbl { fixed_strings = true })
-    MiniTest.expect.equality(opts:to_ripgrep_opts(), { "--fixed-strings" })
-  end)
-
-  it("should merge with another SearchOpts instance", function()
-    local opts = SearchOpts.from_tbl { fixed_strings = true, max_count_per_file = 1 }
-    opts = opts:merge { fixed_strings = false, ignore_case = true }
-    MiniTest.expect.equality(opts:to_ripgrep_opts(), { "--ignore-case", "-m=1" })
   end)
 end)
 
