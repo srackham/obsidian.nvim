@@ -324,8 +324,6 @@ Client._search_opts_from_arg = function(self, opts)
     local sort = opts
     opts = self:search_defaults()
     opts.sort = sort
-  else
-    error("unexpected type for SearchOpts: '" .. type(opts) .. "'")
   end
   return opts
 end
