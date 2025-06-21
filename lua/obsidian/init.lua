@@ -66,6 +66,8 @@ obsidian.info = function()
   client:command("debug", { raw_print = true })
 end
 
+obsidian.register_command = require("obsidian.commands").register
+
 ---Create a new Obsidian client without additional setup.
 ---
 ---@param opts obsidian.config.ClientOpts
