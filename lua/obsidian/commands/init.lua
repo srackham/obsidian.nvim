@@ -2,36 +2,11 @@ local iter = vim.iter
 local log = require "obsidian.log"
 local legacycommands = require "obsidian.commands.init-legacy"
 
-local cmds = {
-  "backlinks",
-  "check",
-  "dailies",
-  "debug",
-  "extract_note",
-  "follow_link",
-  "link",
-  "link_new",
-  "links",
-  "new",
-  "new_from_template",
-  "open",
-  "paste_img",
-  "quick_switch",
-  "rename",
-  "search",
-  "tags",
-  "template",
-  "toc",
-  "today",
-  "toggle_checkbox",
-  "tomorrow",
-  "workspace",
-  "yesterday",
-}
+local M = { commands = {} }
 
 -- TODO: this will be context-sensitive in the future
 local function show_menu()
-  vim.ui.select(cmds, { prompt = "Obsidian Commands" }, function(item)
+  vim.ui.select(vim.tbl_keys(M.commands), { prompt = "Obsidian Commands" }, function(item)
     if item then
       return vim.cmd.Obsidian(item)
     else
@@ -39,8 +14,6 @@ local function show_menu()
     end
   end)
 end
-
-local M = { commands = {} }
 
 ---@class obsidian.CommandConfig
 ---@field complete function|string|?
@@ -128,12 +101,12 @@ M.get_completions = function(client, cmdline)
   local splitcmd = vim.split(cmdline, " ", { plain = true, trimempty = true })
   local obsidiancmd = splitcmd[2]
   if cmdline:match(obspat .. "%s$") then
-    return cmds
+    return vim.tbl_keys(M.commands)
   end
   if cmdline:match(obspat .. "%s%S+$") then
     return vim.tbl_filter(function(s)
       return s:sub(1, #obsidiancmd) == obsidiancmd
-    end, cmds)
+    end, vim.tbl_keys(M.commands))
   end
   local cmdconfig = M.commands[obsidiancmd]
   if cmdconfig == nil then
