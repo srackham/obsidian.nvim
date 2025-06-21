@@ -35,6 +35,7 @@ local config = {}
 ---@field legacy_commands boolean
 ---@field statusline obsidian.config.StatuslineOpts
 ---@field open obsidian.config.OpenOpts
+---@field checkbox obsidian.config.CheckboxOpts
 
 config.ClientOpts = {}
 
@@ -83,6 +84,14 @@ config.ClientOpts.default = function()
     open = {
       use_advanced_uri = false,
       func = vim.ui.open,
+    },
+    ---@class obsidian.config.CheckboxOpts
+    ---@field enabled boolean
+    ---@field order string[]
+    checkbox = {
+      enabled = true,
+      insert = true, -- TODO: ?
+      order = { " ", "~", "!", ">", "x" },
     },
   }
 end
@@ -229,15 +238,6 @@ config.ClientOpts.normalize = function(opts, defaults)
   if opts.tags ~= nil then
     log.warn_once "The 'tags' config option is deprecated and no longer has any affect."
     opts.tags = nil
-  end
-
-  if opts.ui and opts.ui.checkboxes then
-    -- Add a default 'order' for backwards compat.
-    for i, char in ipairs { " ", "x" } do
-      if opts.ui.checkboxes[char] and not opts.ui.checkboxes[char].order then
-        opts.ui.checkboxes[char].order = i
-      end
-    end
   end
 
   if opts.templates and opts.templates.subdir then
@@ -514,11 +514,11 @@ config.UIOpts.default = function()
     update_debounce = 200,
     max_file_length = 5000,
     checkboxes = {
-      [" "] = { order = 1, char = "󰄱", hl_group = "ObsidianTodo" },
-      ["~"] = { order = 2, char = "󰰱", hl_group = "ObsidianTilde" },
-      ["!"] = { order = 3, char = "", hl_group = "ObsidianImportant" },
-      [">"] = { order = 4, char = "", hl_group = "ObsidianRightArrow" },
-      ["x"] = { order = 5, char = "", hl_group = "ObsidianDone" },
+      [" "] = { order = 1, char = "󰄱", hl_group = "obsidiantodo" },
+      ["~"] = { order = 2, char = "󰰱", hl_group = "obsidiantilde" },
+      ["!"] = { order = 3, char = "", hl_group = "obsidianimportant" },
+      [">"] = { order = 4, char = "", hl_group = "obsidianrightarrow" },
+      ["x"] = { order = 5, char = "", hl_group = "obsidiandone" },
     },
     bullets = { char = "•", hl_group = "ObsidianBullet" },
     external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },

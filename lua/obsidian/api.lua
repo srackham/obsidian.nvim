@@ -31,7 +31,7 @@ M.toggle_checkbox = function(states, line_num)
       line = string.gsub(line, "^(%s*)", "%1- [ ] ")
     end
   end
-  -- 0-indexed
+
   vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, true, { line })
 end
 
