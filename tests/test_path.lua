@@ -1,7 +1,7 @@
 local Path = require "obsidian.path"
 local api = require "obsidian.api"
 
-local new_set, eq, not_eq = MiniTest.new_set, MiniTest.expect.equality, MiniTest.expect.no_equality
+local new_set, eq, has_error = MiniTest.new_set, MiniTest.expect.equality, MiniTest.expect.error
 
 local T = new_set()
 
@@ -30,7 +30,7 @@ T["new"]["should init from a plenary path"] = function()
 end
 
 T["new"]["should raise an error if 2 args are passed and the first isn't Path"] = function()
-  MiniTest.expect.error(function()
+  has_error(function()
     ---@diagnostic disable-next-line
     Path.new(1, "bar")
   end)
@@ -121,7 +121,7 @@ T["with_suffix"]["should not add anything else to the filename"] = function()
 end
 
 T["with_suffix"]["should fail when there is no stem"] = function()
-  MiniTest.expect.error(function()
+  has_error(function()
     Path.new("/"):with_suffix ".png"
   end)
 end
@@ -157,11 +157,11 @@ T["relative_to"]["should work on absolute paths"] = function()
 end
 
 T["relative_to"]["should raise an error when the relative path can't be resolved"] = function()
-  MiniTest.expect.error(function()
+  has_error(function()
     Path:new("/bar/bar/baz.md"):relative_to "/foo/"
   end)
 
-  MiniTest.expect.error(function()
+  has_error(function()
     Path:new("bar/bar/baz.md"):relative_to "/bar"
   end)
 end
@@ -188,23 +188,23 @@ T["parent"]["should return '/' for '/' to match Python pathlib API"] = function(
   eq(Path.new "/", Path.new("/"):parent())
 end
 
-describe("Path.parents()", function()
-  it("should collect all logical parents", function()
-    eq(Path.new("/foo/bar/README.md"):parents(), { Path.new "/foo/bar", Path.new "/foo", Path.new "/" })
-  end)
-end)
+T["parents"] = new_set()
 
-describe("Path.resolve()", function()
-  it("should always resolve to the absolute path when it exists", function()
-    eq(vim.fs.normalize(assert(vim.uv.fs_realpath "README.md")), Path.new("README.md"):resolve().filename)
-  end)
+T["parents"]["should collect all logical parents"] = function()
+  eq(Path.new("/foo/bar/README.md"):parents(), { Path.new "/foo/bar", Path.new "/foo", Path.new "/" })
+end
 
-  it("should always resolve to an absolute path if a parent exists", function()
-    eq(vim.fs.normalize(assert(vim.uv.fs_realpath ".")) .. "/tmp/dne.md", Path.new("tmp/dne.md"):resolve().filename)
+T["resolve"] = new_set()
 
-    eq(vim.fs.normalize(assert(vim.uv.fs_realpath ".")) .. "/dne.md", Path.new("dne.md"):resolve().filename)
-  end)
-end)
+T["resolve"]["should always resolve to the absolute path when it exists"] = function()
+  eq(vim.fs.normalize(assert(vim.uv.fs_realpath "README.md")), Path.new("README.md"):resolve().filename)
+end
+
+T["resolve"]["should always resolve to an absolute path if a parent exists"] = function()
+  eq(vim.fs.normalize(assert(vim.uv.fs_realpath ".")) .. "/tmp/dne.md", Path.new("tmp/dne.md"):resolve().filename)
+
+  eq(vim.fs.normalize(assert(vim.uv.fs_realpath ".")) .. "/dne.md", Path.new("dne.md"):resolve().filename)
+end
 
 T["exists"] = new_set()
 
@@ -217,16 +217,16 @@ T["exists"]["should return false when the path does not exists"] = function()
   eq(false, Path.new("dne.md"):exists())
 end
 
-describe("Path.is_file()", function()
-  it("should return true when the path is a file", function()
-    eq(true, Path.new("README.md"):is_file())
-    eq(false, Path.new("README.md"):is_dir())
-  end)
+T["is_file"] = new_set()
 
-  it("should return false when the path is a directory", function()
-    eq(false, Path.new("lua"):is_file())
-  end)
-end)
+T["is_file"]["should return true when the path is a file"] = function()
+  eq(true, Path.new("README.md"):is_file())
+  eq(false, Path.new("README.md"):is_dir())
+end
+
+T["is_file"]["should return false when the path is a directory"] = function()
+  eq(false, Path.new("lua"):is_file())
+end
 
 T["is_dir"] = new_set()
 
@@ -255,7 +255,7 @@ T["mkdir"]["should make a directory"] = function()
 
   dir:mkdir { exist_ok = true }
   eq(true, dir:exists())
-  MiniTest.expect.error(function()
+  has_error(function()
     dir:mkdir { exist_ok = false }
   end)
 
@@ -311,3 +311,5 @@ T["mkdir"]["should rename a directory"] = function()
   target:rmdir()
   eq(false, target:exists())
 end
+
+return T
