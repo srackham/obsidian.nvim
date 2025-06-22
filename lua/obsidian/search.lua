@@ -450,7 +450,7 @@ end
 ---
 ---@field path MatchPath
 ---@field lines MatchText
----@field line_number integer
+---@field line_number integer 0-indexed
 ---@field absolute_offset integer
 ---@field submatches SubMatch[]
 

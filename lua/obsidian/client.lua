@@ -1115,9 +1115,11 @@ Client.find_tags_async = function(self, term, callback, opts)
         end
       end
 
+      local line_number = match_data.line_number + 1 -- match_data.line_number is 0-indexed
+
       -- check if the match was inside a code block.
       for block in iter(code_blocks) do
-        if block[1] <= match_data.line_number and match_data.line_number <= block[2] then
+        if block[1] <= line_number and line_number <= block[2] then
           return
         end
       end
