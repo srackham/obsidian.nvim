@@ -141,7 +141,6 @@ obsidian.setup = function(opts)
       vim.keymap.set("n", "<CR>", require("obsidian.builtin").smart_action, {
         expr = true,
         buffer = true,
-        noremap = false,
         desc = "Obsidian Smart Action",
       })
 
