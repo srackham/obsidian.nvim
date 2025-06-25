@@ -140,8 +140,9 @@ obsidian.setup = function(opts)
       -- Register keymap.
       vim.keymap.set("n", "<CR>", require("obsidian.builtin").smart_action, {
         expr = true,
-        buffer = ev.buf,
+        buffer = true,
         noremap = false,
+        desc = "Obsidian Smart Action",
       })
 
       -- Inject completion sources, providers to their plugin configurations
