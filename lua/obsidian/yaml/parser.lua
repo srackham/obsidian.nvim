@@ -107,7 +107,7 @@ Parser.parse = function(self, str)
         if type(root_value) == "table" then
           parent = root_value
         end
-      elseif util.tbl_is_array(parent) and value_type == YamlType.ArrayItem then
+      elseif util.islist(parent) and value_type == YamlType.ArrayItem then
         -- Add value to parent array.
         parent[#parent + 1] = value
       elseif util.tbl_is_mapping(parent) and value_type == YamlType.Mapping then

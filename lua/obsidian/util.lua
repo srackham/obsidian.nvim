@@ -75,13 +75,11 @@ util.tbl_contains_key = function(t, needle)
 end
 
 ---Check if an object is an array-like table.
+--- TODO: after 0.12 replace with vim.islist
+---
 ---@param t any
 ---@return boolean
-util.tbl_is_array = function(t)
-  if type(t) ~= "table" then
-    return false
-  end
-
+util.islist = function(t)
   return compat.is_list(t)
 end
 
@@ -89,7 +87,7 @@ end
 ---@param t any
 ---@return boolean
 util.tbl_is_mapping = function(t)
-  return type(t) == "table" and (vim.tbl_isempty(t) or not util.tbl_is_array(t))
+  return type(t) == "table" and (vim.tbl_isempty(t) or not util.islist(t))
 end
 
 ---Return a new list table with only the unique values of the original table.

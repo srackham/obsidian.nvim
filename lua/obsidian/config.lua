@@ -1,5 +1,4 @@
 local log = require "obsidian.log"
-local Path = require "obsidian.path"
 
 local config = {}
 
@@ -108,7 +107,6 @@ config.Picker = {
 ---@return obsidian.config.ClientOpts
 config.default = {
   legacy_commands = true,
-  dir = nil,
   workspaces = {},
   log_level = vim.log.levels.INFO,
   notes_subdir = nil,
@@ -539,7 +537,7 @@ See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps]]
     error("Invalid 'sort_by' option '" .. opts.sort_by .. "' in obsidian.nvim config.")
   end
 
-  if not util.tbl_is_array(opts.workspaces) then
+  if not util.islist(opts.workspaces) then
     error "Invalid obsidian.nvim config, the 'config.workspaces' should be an array/list."
   end
 
