@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed corrupted text when custom variables appear more than once in a template file (#198)
 - Add further checks to void false positives when finding tags
 - Off-by-one bug when avoiding tag in code blocks
+- Make tag picker case insensitive
 
 ### Changed
 
