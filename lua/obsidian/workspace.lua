@@ -3,7 +3,7 @@ local abc = require "obsidian.abc"
 
 ---@class obsidian.workspace.WorkspaceSpec
 ---
----@field path string|obsidian.Path|(fun(): string|obsidian.Path)
+---@field path string|(fun(): string)
 ---@field name string|?
 ---@field strict boolean|? If true, the workspace root will be fixed to 'path' instead of the vault root (if different).
 ---@field overrides table|obsidian.config.ClientOpts|?

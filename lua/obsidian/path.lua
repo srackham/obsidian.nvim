@@ -345,10 +345,12 @@ Path.is_parent_of = function(self, other)
   return false
 end
 
+---@return string?
 ---@private
 Path.abspath = function(self)
-  local abspath = vim.fs.abspath and vim.fs.abspath or vim.fs.realpath
-  return abspath(tostring(self))
+  local path = vim.loop.fs_realpath(vim.fn.resolve(self.filename))
+  ---@cast path string|?
+  return path
 end
 
 -------------------------------------------------------------------------------

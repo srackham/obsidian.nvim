@@ -1,4 +1,5 @@
 local log = require "obsidian.log"
+local Path = require "obsidian.path"
 
 local config = {}
 
@@ -540,6 +541,12 @@ See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps]]
 
   if not util.tbl_is_array(opts.workspaces) then
     error "Invalid obsidian.nvim config, the 'config.workspaces' should be an array/list."
+  end
+
+  for i, workspace in ipairs(opts.workspaces) do
+    local path = type(workspace.path) == "function" and workspace.path() or workspace.path
+    ---@cast path -function
+    opts.workspaces[i].path = vim.fn.resolve(vim.fs.normalize(path))
   end
 
   -- Convert dir to workspace format.
