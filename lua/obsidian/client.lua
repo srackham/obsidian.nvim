@@ -1267,4 +1267,471 @@ Client.apply_async_raw = function(self, on_path, opts)
   end
 end
 
+--- Generate a unique ID for a new note. This respects the user's `note_id_func` if configured,
+--- otherwise falls back to generated a Zettelkasten style ID.
+---
+---@param title string|?
+---
+---@return string
+Client.new_note_id = function(self, title)
+  if Obsidian.opts.note_id_func ~= nil then
+    local new_id = Obsidian.opts.note_id_func(title)
+    if new_id == nil or string.len(new_id) == 0 then
+      error(string.format("Your 'note_id_func' must return a non-empty string, got '%s'!", tostring(new_id)))
+    end
+    -- Remote '.md' suffix if it's there (we add that later).
+    new_id = new_id:gsub("%.md$", "", 1)
+    return new_id
+  else
+    return require("obsidian.builtin").zettel_id()
+  end
+end
+
+--- Generate the file path for a new note given its ID, parent directory, and title.
+--- This respects the user's `note_path_func` if configured, otherwise essentially falls back to
+--- `spec.dir / (spec.id .. ".md")`.
+---
+---@param spec { id: string, dir: obsidian.Path, title: string|? }
+---
+---@return obsidian.Path
+Client.new_note_path = function(self, spec)
+  ---@type obsidian.Path
+  local path
+  if Obsidian.opts.note_path_func ~= nil then
+    path = Path.new(Obsidian.opts.note_path_func(spec))
+    -- Ensure path is either absolute or inside `spec.dir`.
+    -- NOTE: `spec.dir` should always be absolute, but for extra safety we handle the case where
+    -- it's not.
+    if not path:is_absolute() and (spec.dir:is_absolute() or not spec.dir:is_parent_of(path)) then
+      path = spec.dir / path
+    end
+  else
+    path = spec.dir / tostring(spec.id)
+  end
+
+  -- Ensure there is only one ".md" suffix. This might arise if `note_path_func`
+  -- supplies an unusual implementation returning something like /bad/note/id.md.md.md
+  while path.filename:match "%.md$" do
+    path.filename = path.filename:gsub("%.md$", "")
+  end
+
+  return path:with_suffix(".md", true)
+end
+
+--- Parse the title, ID, and path for a new note.
+---
+---@param title string|?
+---@param id string|?
+---@param dir string|obsidian.Path|?
+---
+---@return string|?,string,obsidian.Path
+Client.parse_title_id_path = function(self, title, id, dir)
+  if title then
+    title = vim.trim(title)
+    if title == "" then
+      title = nil
+    end
+  end
+
+  if id then
+    id = vim.trim(id)
+    if id == "" then
+      id = nil
+    end
+  end
+
+  ---@param s string
+  ---@param strict_paths_only boolean
+  ---@return string|?, boolean, string|?
+  local parse_as_path = function(s, strict_paths_only)
+    local is_path = false
+    ---@type string|?
+    local parent
+
+    if s:match "%.md" then
+      -- Remove suffix.
+      s = s:sub(1, s:len() - 3)
+      is_path = true
+    end
+
+    -- Pull out any parent dirs from title.
+    local parts = vim.split(s, "/")
+    if #parts > 1 then
+      s = parts[#parts]
+      if not strict_paths_only then
+        is_path = true
+      end
+      parent = table.concat(parts, "/", 1, #parts - 1)
+    end
+
+    if s == "" then
+      return nil, is_path, parent
+    else
+      return s, is_path, parent
+    end
+  end
+
+  local parent, _, title_is_path
+  if id then
+    id, _, parent = parse_as_path(id, false)
+  elseif title then
+    title, title_is_path, parent = parse_as_path(title, true)
+    if title_is_path then
+      id = title
+    end
+  end
+
+  -- Resolve base directory.
+  ---@type obsidian.Path
+  local base_dir
+  if parent then
+    base_dir = Obsidian.dir / parent
+  elseif dir ~= nil then
+    base_dir = Path.new(dir)
+    if not base_dir:is_absolute() then
+      base_dir = Obsidian.dir / base_dir
+    else
+      base_dir = base_dir:resolve()
+    end
+  else
+    local bufpath = Path.buffer(0):resolve()
+    if
+      Obsidian.opts.new_notes_location == config.NewNotesLocation.current_dir
+      -- note is actually in the workspace.
+      and Obsidian.dir:is_parent_of(bufpath)
+      -- note is not in dailies folder
+      and (
+        Obsidian.opts.daily_notes.folder == nil
+        or not (Obsidian.dir / Obsidian.opts.daily_notes.folder):is_parent_of(bufpath)
+      )
+    then
+      base_dir = Obsidian.buf_dir or assert(bufpath:parent())
+    else
+      base_dir = Obsidian.dir
+      if Obsidian.opts.notes_subdir then
+        base_dir = base_dir / Obsidian.opts.notes_subdir
+      end
+    end
+  end
+
+  -- Make sure `base_dir` is absolute at this point.
+  assert(base_dir:is_absolute(), ("failed to resolve note directory '%s'"):format(base_dir))
+
+  -- Generate new ID if needed.
+  if not id then
+    id = self:new_note_id(title)
+  end
+
+  -- Generate path.
+  ---@type obsidian.Path
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  local path = self:new_note_path { id = id, dir = base_dir, title = title }
+
+  return title, id, path
+end
+
+---@class obsidian.CreateNoteOpts
+---
+---@field title string|?
+---@field id string|?
+---@field dir string|obsidian.Path|?
+---@field aliases string[]|?
+---@field tags string[]|?
+---@field no_write boolean|?
+---@field template string|?
+
+--- Create a new note with the following options.
+---
+---@param opts obsidian.CreateNoteOpts|? Options.
+---
+--- Options:
+---  - `title`: A title to assign the note.
+---  - `id`: An ID to assign the note. If not specified one will be generated.
+---  - `dir`: An optional directory to place the note in. Relative paths will be interpreted
+---    relative to the workspace / vault root. If the directory doesn't exist it will be created,
+---    regardless of the value of the `no_write` option.
+---  - `aliases`: Additional aliases to assign to the note.
+---  - `tags`: Additional tags to assign to the note.
+---  - `no_write`: Don't write the note to disk.
+---  - `template`: The name of a template to apply when writing the note to disk.
+---
+---@return obsidian.Note
+Client.create_note = function(self, opts)
+  opts = opts or {}
+
+  local new_title, new_id, path = self:parse_title_id_path(opts.title, opts.id, opts.dir)
+
+  -- Add title as an alias.
+  ---@type string[]
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  local aliases = opts.aliases or {}
+  if new_title ~= nil and new_title:len() > 0 and not vim.list_contains(aliases, new_title) then
+    aliases[#aliases + 1] = new_title
+  end
+
+  -- Create `Note` object.
+  local note = Note.new(new_id, aliases, opts.tags or {}, path)
+  if new_title then
+    note.title = new_title
+  end
+
+  -- Ensure the parent directory exists.
+  local parent = path:parent()
+  assert(parent)
+  parent:mkdir { parents = true, exist_ok = true }
+
+  -- Write to disk.
+  if not opts.no_write then
+    note = self:write_note(note, { template = opts.template })
+  end
+
+  return note
+end
+
+--- Write the note to disk.
+---
+---@param note obsidian.Note
+---@param opts { path: string|obsidian.Path, template: string|?, update_content: (fun(lines: string[]): string[])|? }|? Options.
+---
+--- Options:
+---  - `path`: Override the path to write to.
+---  - `template`: The name of a template to use if the note file doesn't already exist.
+---  - `update_content`: A function to update the contents of the note. This takes a list of lines
+---    representing the text to be written excluding frontmatter, and returns the lines that will
+---    actually be written (again excluding frontmatter).
+---
+---@return obsidian.Note
+Client.write_note = function(self, note, opts)
+  local clone_template = require("obsidian.templates").clone_template
+  opts = opts or {}
+
+  local path = assert(opts.path or note.path, "A path must be provided")
+  path = Path.new(path)
+
+  ---@type string
+  local verb
+  if path:is_file() then
+    verb = "Updated"
+  else
+    verb = "Created"
+    if opts.template ~= nil then
+      note = clone_template {
+        type = "clone_template",
+        template_name = opts.template,
+        destination_path = path,
+        template_opts = Obsidian.opts.templates,
+        templates_dir = assert(api.templates_dir(), "Templates folder is not defined or does not exist"),
+        partial_note = note,
+      }
+    end
+  end
+
+  local frontmatter = nil
+  if Obsidian.opts.note_frontmatter_func ~= nil then
+    frontmatter = Obsidian.opts.note_frontmatter_func(note)
+  end
+
+  note:save {
+    path = path,
+    insert_frontmatter = self:should_save_frontmatter(note),
+    frontmatter = frontmatter,
+    update_content = opts.update_content,
+  }
+
+  log.info("%s note '%s' at '%s'", verb, note.id, note.path:vault_relative_path() or note.path)
+
+  return note
+end
+
+--- Write the note to a buffer.
+---
+---@param note obsidian.Note
+---@param opts { bufnr: integer|?, template: string|? }|? Options.
+---
+--- Options:
+---  - `bufnr`: Override the buffer to write to. Defaults to current buffer.
+---  - `template`: The name of a template to use if the buffer is empty.
+---
+---@return boolean updated If the buffer was updated.
+Client.write_note_to_buffer = function(self, note, opts)
+  local insert_template = require("obsidian.templates").insert_template
+  opts = opts or {}
+
+  if opts.template and api.buffer_is_empty(opts.bufnr) then
+    note = insert_template {
+      type = "insert_template",
+      template_name = opts.template,
+      template_opts = Obsidian.opts.templates,
+      templates_dir = assert(api.templates_dir(), "Templates folder is not defined or does not exist"),
+      location = api.get_active_window_cursor_location(),
+      partial_note = note,
+    }
+  end
+
+  local frontmatter = nil
+  local should_save_frontmatter = self:should_save_frontmatter(note)
+  if should_save_frontmatter and Obsidian.opts.note_frontmatter_func ~= nil then
+    frontmatter = Obsidian.opts.note_frontmatter_func(note)
+  end
+
+  return note:save_to_buffer {
+    bufnr = opts.bufnr,
+    insert_frontmatter = should_save_frontmatter,
+    frontmatter = frontmatter,
+  }
+end
+
+--- Update the frontmatter in a buffer for the note.
+---
+---@param note obsidian.Note
+---@param bufnr integer|?
+---
+---@return boolean updated If the the frontmatter was updated.
+Client.update_frontmatter = function(self, note, bufnr)
+  if not self:should_save_frontmatter(note) then
+    return false
+  end
+
+  local frontmatter = nil
+  if Obsidian.opts.note_frontmatter_func ~= nil then
+    frontmatter = Obsidian.opts.note_frontmatter_func(note)
+  end
+  return note:save_to_buffer { bufnr = bufnr, frontmatter = frontmatter }
+end
+
+--- Create a formatted markdown / wiki link for a note.
+---
+---@param note obsidian.Note|obsidian.Path|string The note/path to link to.
+---@param opts { label: string|?, link_style: obsidian.config.LinkStyle|?, id: string|integer|?, anchor: obsidian.note.HeaderAnchor|?, block: obsidian.note.Block|? }|? Options.
+---
+---@return string
+Client.format_link = function(self, note, opts)
+  opts = opts or {}
+
+  ---@type string, string, string|integer|?
+  local rel_path, label, note_id
+  if type(note) == "string" or Path.is_path_obj(note) then
+    ---@cast note string|obsidian.Path
+    -- rel_path = tostring(self:vault_relative_path(note, { strict = true }))
+    rel_path = assert(Path.new(note):vault_relative_path { strict = true })
+    label = opts.label or tostring(note)
+    note_id = opts.id
+  else
+    ---@cast note obsidian.Note
+    -- rel_path = tostring(self:vault_relative_path(note.path, { strict = true }))
+    rel_path = assert(note.path:vault_relative_path { strict = true })
+    label = opts.label or note:display_name()
+    note_id = opts.id or note.id
+  end
+
+  local link_style = opts.link_style
+  if link_style == nil then
+    link_style = Obsidian.opts.preferred_link_style
+  end
+
+  local new_opts = { path = rel_path, label = label, id = note_id, anchor = opts.anchor, block = opts.block }
+
+  if link_style == config.LinkStyle.markdown then
+    return Obsidian.opts.markdown_link_func(new_opts)
+  elseif link_style == config.LinkStyle.wiki or link_style == nil then
+    return Obsidian.opts.wiki_link_func(new_opts)
+  else
+    error(string.format("Invalid link style '%s'", link_style))
+  end
+end
+
+--- Get the Picker.
+---
+---@param picker_name obsidian.config.Picker|?
+---
+---@return obsidian.Picker|?
+Client.picker = function(self, picker_name)
+  return require("obsidian.pickers").get(self, picker_name)
+end
+
+--- Register the global variable that updates itself
+Client.statusline = function(self)
+  local current_note
+
+  local refresh = function()
+    local note = self:current_note()
+    if not note then -- no note
+      return ""
+    elseif current_note == note then -- no refresh
+      return
+    else -- refresh
+      current_note = note
+    end
+
+    self:find_backlinks_async(
+      note,
+      vim.schedule_wrap(function(backlinks)
+        local format = assert(self.opts.statusline.format)
+        local wc = vim.fn.wordcount()
+        local info = {
+          words = wc.words,
+          chars = wc.chars,
+          backlinks = #backlinks,
+          properties = vim.tbl_count(note:frontmatter()),
+        }
+        for k, v in pairs(info) do
+          format = format:gsub("{{" .. k .. "}}", v)
+        end
+        vim.g.obsidian = format
+      end)
+    )
+  end
+
+  local timer = uv:new_timer()
+  assert(timer, "Failed to create timer")
+  timer:start(0, 1000, vim.schedule_wrap(refresh))
+end
+
+--- Start the lsp client
+---
+---@return integer
+Client.lsp_start = function(self, buf)
+  local handlers = require "obsidian.lsp.handlers"
+  local has_blink, blink = pcall(require, "blink.cmp")
+  local has_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+
+  local capabilities
+  if has_blink then
+    capabilities = blink.get_lsp_capabilities({}, true)
+  elseif has_cmp then
+    capabilities = cmp_lsp.default_capabilities()
+  else
+    capabilities = vim.lsp.protocol.make_client_capabilities()
+  end
+
+  local client_id = vim.lsp.start {
+    name = "obsidian-ls",
+    capabilities = capabilities,
+    cmd = function()
+      return {
+        request = function(method, params, handler, _)
+          handlers[method](self, params, handler, _)
+        end,
+        notify = function(method, params, handler, _)
+          handlers[method](self, params, handler, _)
+        end,
+        is_closing = function() end,
+        terminate = function() end,
+      }
+    end,
+    init_options = {},
+    root_dir = tostring(self.dir),
+  }
+  assert(client_id, "failed to start obsidian_ls")
+
+  if not (has_blink or has_cmp) then
+    vim.lsp.completion.enable(true, client_id, buf, { autotrigger = true })
+    vim.bo[buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+    vim.bo[buf].completeopt = "menu,menuone,noselect"
+    vim.bo[buf].iskeyword = "@,48-57,192-255" -- HACK: so that completion for note names with `-` in it works in native completion
+  end
+
+  return client_id
+end
+
 return Client
