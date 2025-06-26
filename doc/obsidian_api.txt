@@ -893,7 +893,7 @@ Class ~
 {obsidian.workspace.WorkspaceSpec}
 
 Fields ~
-{path} `(string|obsidian.Path|(fun(): string|obsidian.Path))`
+{path} `(string|(fun(): string))`
 {name} `(string|)`?
 {strict} `(boolean|? If)` true, the workspace root will be fixed to 'path' instead of the vault root (if different).
 {overrides} `(table|obsidian.config.ClientOpts|)`?
