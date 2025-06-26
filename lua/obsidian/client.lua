@@ -1130,7 +1130,7 @@ Client.find_tags_async = function(self, term, callback, opts)
         for tag in iter(note.tags) do
           tag = tostring(tag)
           for _, t in ipairs(terms) do
-            if string.len(t) == 0 or util.string_contains(tag, t) then
+            if string.len(t) == 0 or util.string_contains(tag:lower(), t:lower()) then
               add_match(tag, path, note, match_data.line_number, line)
             end
           end
