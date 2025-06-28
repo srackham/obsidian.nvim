@@ -1122,7 +1122,7 @@ Client.find_tags_async = function(self, term, callback, opts)
         for tag in iter(note.tags) do
           tag = tostring(tag)
           for _, t in ipairs(terms) do
-            if string.len(t) == 0 or util.string_contains(tag, t) then
+            if string.len(t) == 0 or util.string_contains(tag:lower(), t:lower()) then
               add_match(tag, path, note, match_data.line_number, line)
             end
           end
@@ -1467,7 +1467,10 @@ Client.list_tags_async = function(self, term, callback)
   self:find_tags_async(term and term or "", function(tag_locations)
     local tags = {}
     for _, tag_loc in ipairs(tag_locations) do
-      tags[tag_loc.tag] = true
+      local tag = tag_loc.tag:lower()
+      if not tags[tag] then
+        tags[tag] = true
+      end
     end
     callback(vim.tbl_keys(tags))
   end)
