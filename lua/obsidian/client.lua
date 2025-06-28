@@ -1474,8 +1474,12 @@ end
 Client.list_tags_async = function(self, term, callback)
   self:find_tags_async(term and term or "", function(tag_locations)
     local tags = {}
+    local found = {}
     for _, tag_loc in ipairs(tag_locations) do
-      tags[tag_loc.tag] = true
+      if not found[tag_loc.tag:lower()] then
+        tags[tag_loc.tag] = true
+        found[tag_loc.tag:lower()] = true
+      end
     end
     callback(vim.tbl_keys(tags))
   end)
