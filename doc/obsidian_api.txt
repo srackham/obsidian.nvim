@@ -35,13 +35,6 @@ in Lua. To get the client instance, run:
 Class ~
 {obsidian.Client} : obsidian.ABC
 
-Fields ~
-{current_workspace} `(obsidian.Workspace)` The current workspace.
-{dir} `(obsidian.Path)` The root of the vault for the current workspace.
-{opts} `(obsidian.config.ClientOpts)` The client config.
-{buf_dir} `(obsidian.Path|? The)` parent directory of the current buffer.
-{_default_opts} `(obsidian.config.ClientOpts)`
-
 ------------------------------------------------------------------------------
                                                          *obsidian.Client.new()*
                               `Client.new`({opts})
@@ -456,21 +449,6 @@ Parameters ~
 
 Return ~
 `(string| `(optional))``,string,obsidian.Path
-
-------------------------------------------------------------------------------
-                                                    *obsidian.Client.new_note()*
-           `Client.new_note`({self}, {title}, {id}, {dir}, {aliases})
-Create and save a new note.
-Deprecated: prefer `Client:create_note()` instead.
-
-Parameters ~
-{title} `(string|? The)` title for the note.
-{id} `(string|? An)` optional ID for the note. If not provided one will be generated.
-{dir} `(string|obsidian.Path|? An)` optional directory to place the note. If this is a relative path it will be interpreted relative the workspace / vault root.
-{aliases} `(string[]|? Additional)` aliases to assign to the note.
-
-Return ~
-`(obsidian.Note)`
 
 ------------------------------------------------------------------------------
 Class ~
@@ -956,29 +934,6 @@ Initialize a new 'Workspace' object from a workspace spec.
 
 Parameters ~
 {spec} `(obsidian.workspace.WorkspaceSpec)`
-
-Return ~
-`(obsidian.Workspace)`
-
-------------------------------------------------------------------------------
-                                             *obsidian.Workspace.new_from_cwd()*
-                        `Workspace.new_from_cwd`({opts})
-Initialize a 'Workspace' object from the current working directory.
-
-Parameters ~
-{opts} `(obsidian.workspace.WorkspaceOpts|)`?
-
-Return ~
-`(obsidian.Workspace)`
-
-------------------------------------------------------------------------------
-                                             *obsidian.Workspace.new_from_buf()*
-                   `Workspace.new_from_buf`({bufnr}, {opts})
-Initialize a 'Workspace' object from the parent directory of the current buffer.
-
-Parameters ~
-{bufnr} `(integer|)`?
-{opts} `(obsidian.workspace.WorkspaceOpts|)`?
 
 Return ~
 `(obsidian.Workspace)`
