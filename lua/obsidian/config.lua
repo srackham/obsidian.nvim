@@ -153,14 +153,14 @@ config.default = {
   ---@field blink? boolean
   ---@field min_chars? integer
   ---@field match_case? boolean
-  ---@field create_files? boolean
+  ---@field create_new? boolean
   completion = (function()
     local has_nvim_cmp, _ = pcall(require, "cmp")
     return {
       nvim_cmp = has_nvim_cmp,
       min_chars = 2,
       match_case = true,
-      create_files = true,
+      create_new = true,
     }
   end)(),
 
