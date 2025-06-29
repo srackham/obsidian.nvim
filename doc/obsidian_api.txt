@@ -51,33 +51,6 @@ Return ~
 `(obsidian.Client)`
 
 ------------------------------------------------------------------------------
-                                               *obsidian.Client.set_workspace()*
-              `Client.set_workspace`({self}, {workspace}, {opts})
-Parameters ~
-{workspace} `(obsidian.Workspace)`
-{opts} `({ lock: boolean|? }|)`?
-
-------------------------------------------------------------------------------
-                                          *obsidian.Client.opts_for_workspace()*
-                `Client.opts_for_workspace`({self}, {workspace})
-Get the normalize opts for a given workspace.
-
-Parameters ~
-{workspace} `(obsidian.Workspace|)`?
-
-Return ~
-`(obsidian.config.ClientOpts)`
-
-------------------------------------------------------------------------------
-                                            *obsidian.Client.switch_workspace()*
-             `Client.switch_workspace`({self}, {workspace}, {opts})
-Switch to a different workspace.
-
-Parameters ~
-{workspace} `(obsidian.Workspace|string)` The workspace object or the name of an existing workspace.
-{opts} `({ lock: boolean|? }|)`?
-
-------------------------------------------------------------------------------
                                                 *obsidian.Client.path_is_note()*
                `Client.path_is_note`({self}, {path}, {workspace})
 Check if a path represents a note in the workspace.
@@ -90,44 +63,9 @@ Return ~
 `(boolean)`
 
 ------------------------------------------------------------------------------
-                                                  *obsidian.Client.vault_root()*
-                    `Client.vault_root`({self}, {workspace})
-Get the absolute path to the root of the Obsidian vault for the given workspace or the
-current workspace.
-
-Parameters ~
-{workspace} `(obsidian.Workspace|)`?
-
-Return ~
-`(obsidian.Path)`
-
-------------------------------------------------------------------------------
-                                                  *obsidian.Client.vault_name()*
-                          `Client.vault_name`({self})
-Get the name of the current vault.
-
-Return ~
-`(string)`
-
-------------------------------------------------------------------------------
-                                         *obsidian.Client.vault_relative_path()*
-              `Client.vault_relative_path`({self}, {path}, {opts})
-Make a path relative to the vault root, if possible.
-
-Parameters ~
-{path} `(string|obsidian.Path)`
-{opts} `({ strict: boolean|? }|)`?
-
-Return ~
-`(obsidian.Path| `(optional))``
-
-------------------------------------------------------------------------------
                                                *obsidian.Client.templates_dir()*
                   `Client.templates_dir`({self}, {workspace})
 Get the templates folder.
-
-Parameters ~
-{workspace} `(obsidian.Workspace|)`?
 
 Return ~
 `(obsidian.Path| `(optional))``
@@ -996,6 +934,24 @@ Return ~
 `(obsidian.Workspace| `(optional))``
 
 ------------------------------------------------------------------------------
+                                           *obsidian.Workspace.normalize_opts()*
+                    `Workspace.normalize_opts`({workspace})
+Get the normalize opts for a given workspace.
+
+Parameters ~
+{workspace} `(obsidian.Workspace|)`?
+
+Return ~
+`(obsidian.config.ClientOpts)`
+
+------------------------------------------------------------------------------
+                                                      *obsidian.Workspace.set()*
+                      `Workspace.set`({workspace}, {opts})
+Parameters ~
+{workspace} `(obsidian.Workspace)`
+{opts} `({ lock: boolean|? }|)`?
+
+------------------------------------------------------------------------------
                                                          *obsidian.cached_get()*
                       `cached_get`({path}, {k}, {factory})
 Parameters ~
@@ -1251,5 +1207,16 @@ Remove the file.
 
 Parameters ~
 {opts} `({ missing_ok: boolean|? }|)`?
+
+------------------------------------------------------------------------------
+                                           *obsidian.Path.vault_relative_path()*
+                   `Path.vault_relative_path`({self}, {opts})
+Make a path relative to the vault root, if possible, return a string
+
+Parameters ~
+{opts} `({ strict: boolean|? }|)`?
+
+Return ~
+`(string)` `(optional)`
 
  vim:tw=78:ts=8:noet:ft=help:norl:
