@@ -2,6 +2,7 @@ local h = dofile "tests/helpers.lua"
 local new_set, eq = MiniTest.new_set, MiniTest.expect.equality
 local M = require "obsidian.templates"
 local Note = require "obsidian.note"
+local api = require "obsidian.api"
 
 local T = new_set()
 
@@ -14,7 +15,7 @@ local T = new_set()
 local tmp_template_context = function(client, ctx)
   return vim.tbl_extend("keep", ctx or {}, {
     type = "insert_template",
-    templates_dir = client:templates_dir(),
+    templates_dir = api.templates_dir(),
     template_opts = Obsidian.opts.templates,
     partial_note = Note.new("FOO", { "FOO" }, {}),
   })

@@ -82,58 +82,6 @@ Client.new = function(opts)
   return self
 end
 
--- Client.set_workspace = function(self, workspace, opts) end
-
---- Check if a path represents a note in the workspace.
----
----@param path string|obsidian.Path
----@param workspace obsidian.Workspace|?
----
----@return boolean
-Client.path_is_note = function(self, path, workspace)
-  path = Path.new(path):resolve()
-
-  -- Notes have to be markdown file.
-  if path.suffix ~= ".md" then
-    return false
-  end
-
-  -- Ignore markdown files in the templates directory.
-  local templates_dir = self:templates_dir(workspace)
-  if templates_dir ~= nil then
-    if templates_dir:is_parent_of(path) then
-      return false
-    end
-  end
-
-  return true
-end
-
---- Get the templates folder.
----
----@return obsidian.Path|?
-Client.templates_dir = function(self, workspace)
-  local opts = Obsidian.opts
-
-  if workspace and workspace ~= Obsidian.workspace then
-    opts = Workspace.normalize_opts(workspace)
-  end
-
-  if opts.templates == nil or opts.templates.folder == nil then
-    return nil
-  end
-
-  local paths_to_check = { Obsidian.workspace.root / opts.templates.folder, Path.new(opts.templates.folder) }
-  for _, path in ipairs(paths_to_check) do
-    if path:is_dir() then
-      return path
-    end
-  end
-
-  log.err_once("'%s' is not a valid templates directory", opts.templates.folder)
-  return nil
-end
-
 --- Determines whether a note's frontmatter is managed by obsidian.nvim.
 ---
 ---@param note obsidian.Note
@@ -141,7 +89,7 @@ end
 ---@return boolean
 Client.should_save_frontmatter = function(self, note)
   -- Check if the note is a template.
-  local templates_dir = self:templates_dir()
+  local templates_dir = api.templates_dir()
   if templates_dir ~= nil then
     templates_dir = templates_dir:resolve()
     for _, parent in ipairs(note.path:parents()) do
@@ -827,26 +775,6 @@ Client.open_note = function(self, note_or_path, opts)
   end
 end
 
---- Get the current note from a buffer.
----
----@param bufnr integer|?
----@param opts obsidian.note.LoadOpts|?
----
----@return obsidian.Note|?
----@diagnostic disable-next-line: unused-local
-Client.current_note = function(self, bufnr, opts)
-  bufnr = bufnr or 0
-  if not self:path_is_note(vim.api.nvim_buf_get_name(bufnr)) then
-    return nil
-  end
-
-  opts = opts or {}
-  if not opts.max_lines then
-    opts.max_lines = Obsidian.opts.search_max_lines
-  end
-  return Note.from_buffer(bufnr, opts)
-end
-
 ---@class obsidian.TagLocation
 ---
 ---@field tag string The tag found.
@@ -1390,7 +1318,7 @@ Client.apply_async_raw = function(self, on_path, opts)
   local dir_opts = {
     depth = 10,
     skip = function(dir)
-      return not vim.startswith(dir, ".") and dir ~= vim.fs.basename(tostring(self:templates_dir()))
+      return not vim.startswith(dir, ".") and dir ~= vim.fs.basename(tostring(api.templates_dir()))
     end,
     follow = true,
   }
@@ -1661,7 +1589,7 @@ Client.write_note = function(self, note, opts)
         template_name = opts.template,
         destination_path = path,
         template_opts = Obsidian.opts.templates,
-        templates_dir = assert(self:templates_dir(), "Templates folder is not defined or does not exist"),
+        templates_dir = assert(api.templates_dir(), "Templates folder is not defined or does not exist"),
         partial_note = note,
       }
     end
@@ -1703,7 +1631,7 @@ Client.write_note_to_buffer = function(self, note, opts)
       type = "insert_template",
       template_name = opts.template,
       template_opts = Obsidian.opts.templates,
-      templates_dir = assert(self:templates_dir(), "Templates folder is not defined or does not exist"),
+      templates_dir = assert(api.templates_dir(), "Templates folder is not defined or does not exist"),
       location = api.get_active_window_cursor_location(),
       partial_note = note,
     }
@@ -1738,56 +1666,6 @@ Client.update_frontmatter = function(self, note, bufnr)
     frontmatter = Obsidian.opts.note_frontmatter_func(note)
   end
   return note:save_to_buffer { bufnr = bufnr, frontmatter = frontmatter }
-end
-
---- Create a formatted markdown / wiki link for a note.
----
----@param note obsidian.Note|obsidian.Path|string The note/path to link to.
----@param opts { label: string|?, link_style: obsidian.config.LinkStyle|?, id: string|integer|?, anchor: obsidian.note.HeaderAnchor|?, block: obsidian.note.Block|? }|? Options.
----
----@return string
-Client.format_link = function(self, note, opts)
-  opts = opts or {}
-
-  ---@type string, string, string|integer|?
-  local rel_path, label, note_id
-  if type(note) == "string" or Path.is_path_obj(note) then
-    ---@cast note string|obsidian.Path
-    -- rel_path = tostring(self:vault_relative_path(note, { strict = true }))
-    rel_path = assert(Path.new(note):vault_relative_path { strict = true })
-    label = opts.label or tostring(note)
-    note_id = opts.id
-  else
-    ---@cast note obsidian.Note
-    -- rel_path = tostring(self:vault_relative_path(note.path, { strict = true }))
-    rel_path = assert(note.path:vault_relative_path { strict = true })
-    label = opts.label or note:display_name()
-    note_id = opts.id or note.id
-  end
-
-  local link_style = opts.link_style
-  if link_style == nil then
-    link_style = Obsidian.opts.preferred_link_style
-  end
-
-  local new_opts = { path = rel_path, label = label, id = note_id, anchor = opts.anchor, block = opts.block }
-
-  if link_style == config.LinkStyle.markdown then
-    return Obsidian.opts.markdown_link_func(new_opts)
-  elseif link_style == config.LinkStyle.wiki or link_style == nil then
-    return Obsidian.opts.wiki_link_func(new_opts)
-  else
-    error(string.format("Invalid link style '%s'", link_style))
-  end
-end
-
---- Get the Picker.
----
----@param picker_name obsidian.config.Picker|?
----
----@return obsidian.Picker|?
-Client.picker = function(self, picker_name)
-  return require("obsidian.pickers").get(self, picker_name)
 end
 
 return Client

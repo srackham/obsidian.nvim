@@ -178,7 +178,7 @@ obsidian.setup = function(opts)
       end
 
       -- Check if current buffer is actually a note within the workspace.
-      if not client:path_is_note(ev.match) then
+      if not obsidian.api.path_is_note(ev.match) then
         return
       end
 
@@ -204,7 +204,7 @@ obsidian.setup = function(opts)
       end
 
       -- Check if current buffer is actually a note within the workspace.
-      if not client:path_is_note(ev.match) then
+      if not obsidian.api.path_is_note(ev.match) then
         return
       end
 
@@ -237,7 +237,7 @@ obsidian.setup = function(opts)
       end
 
       -- Check if current buffer is actually a note within the workspace.
-      if not client:path_is_note(ev.match) then
+      if not obsidian.api.path_is_note(ev.match) then
         return
       end
 
