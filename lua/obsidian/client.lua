@@ -507,7 +507,7 @@ Client.resolve_note_async_with_picker_fallback = function(self, query, callback,
     -- Fall back to picker.
     vim.schedule(function()
       -- Otherwise run the preferred picker to search for notes.
-      local picker = self:picker()
+      local picker = Obsidian.picker
       if not picker then
         log.err("Found multiple notes matching '%s', but no picker is configured", query)
         return
@@ -703,7 +703,7 @@ Client.follow_link_async = function(self, link, opts)
       end)
     else
       return vim.schedule(function()
-        local picker = self:picker()
+        local picker = Obsidian.picker
         if not picker then
           log.err("Found multiple matches to '%s', but no picker is configured", link)
           return

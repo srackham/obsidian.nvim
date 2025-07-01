@@ -78,6 +78,7 @@ obsidian.setup = function(opts)
   opts = obsidian.config.normalize(opts)
 
   ---@class obsidian.state
+  ---@field picker obsidian.Picker The picker instance to use.
   ---@field workspace obsidian.Workspace The current workspace.
   ---@field dir obsidian.Path The root of the vault for the current workspace.
   ---@field buf_dir obsidian.Path|? The parent directory of the current buffer.

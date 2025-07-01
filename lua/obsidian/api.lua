@@ -126,7 +126,6 @@ end
 ---@return string
 M.format_link = function(note, opts)
   local config = require "obsidian.config"
-  local Path = require "obsidian.path"
   opts = opts or {}
 
   ---@type string, string, string|integer|?
@@ -273,7 +272,6 @@ end
 ---@param opts { line: integer|?, col: integer|?, cmd: string|? }|?
 ---@return integer bufnr
 M.open_buffer = function(path, opts)
-  local Path = require "obsidian.path"
   path = Path.new(path):resolve()
   opts = opts and opts or {}
   local cmd = vim.trim(opts.cmd and opts.cmd or "e")
