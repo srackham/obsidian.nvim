@@ -65,6 +65,17 @@ For remapping and creating your own mappings, see [Keymaps](https://github.com/o
 
 ### Commands
 
+There's one entry point user command for this plugin: `Obsidian`
+
+- `Obsidian<CR>` (`<enter>`) to select sub commands.
+- `Obsidian <Tab>` to get completion for sub commands.
+- Sub commands are context sensitive, meaning some actions will only appear when:
+  - you are in a note.
+  - you are in visual mode.
+- See [Commands](https://github.com/obsidian-nvim/obsidian.nvim/wiki/Commands) for more info.
+
+**List of available commands:**
+
 - `:Obsidian backlinks` for getting a picker list of references to the current buffer.
 
 - `:Obsidian dailies [OFFSET ...]` to open a picker list of daily notes. For example, `:Obsidian dailies -2 1` to list daily notes from 2 days ago until tomorrow.

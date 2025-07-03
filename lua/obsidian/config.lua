@@ -507,11 +507,6 @@ See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps]]
     opts.image_name_func = nil
   end
 
-  if opts.legacy_commands then
-    deprecate("legacy_commands", [[move from commands like `ObsidianBacklinks` to `Obsidian backlinks`]], "4.0")
-    opts.tags = nil
-  end
-
   --------------------------
   -- Merge with defaults. --
   --------------------------
@@ -532,6 +527,17 @@ See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps]]
   ---------------
   -- Validate. --
   ---------------
+
+  if opts.legacy_commands then
+    deprecate(
+      "legacy_commands",
+      [[move from commands like `ObsidianBacklinks` to `Obsidian backlinks`
+and set `opts.legacy_commands` to false to get rid of this warning.
+see https://github.com/obsidian-nvim/obsidian.nvim/wiki/Commands for details.
+    ]],
+      "4.0"
+    )
+  end
 
   if opts.sort_by ~= nil and not vim.tbl_contains(vim.tbl_values(config.SortBy), opts.sort_by) then
     error("Invalid 'sort_by' option '" .. opts.sort_by .. "' in obsidian.nvim config.")
