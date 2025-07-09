@@ -1,5 +1,6 @@
 local log = require "obsidian.log"
 local api = require "obsidian.api"
+local Note = require "obsidian.note"
 
 ---Extract the selected text into a new note
 ---and replace the selection with a link to the new note.
@@ -30,7 +31,7 @@ return function(client, data)
   end
 
   -- create the new note.
-  local note = client:create_note { title = title }
+  local note = Note.create { title = title }
 
   -- replace selection with link to new note
   local link = api.format_link(note)
@@ -39,6 +40,6 @@ return function(client, data)
   require("obsidian.ui").update(0)
 
   -- add the selected text to the end of the new note
-  client:open_note(note, { sync = true })
+  note:open { sync = true }
   vim.api.nvim_buf_set_lines(0, -1, -1, false, content)
 end
