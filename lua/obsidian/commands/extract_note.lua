@@ -5,9 +5,8 @@ local Note = require "obsidian.note"
 ---Extract the selected text into a new note
 ---and replace the selection with a link to the new note.
 ---
----@param client obsidian.Client
 ---@param data CommandArgs
-return function(client, data)
+return function(_, data)
   local viz = api.get_visual_selection()
   if not viz then
     log.err "Obsidian extract_note must be called with visual selection"

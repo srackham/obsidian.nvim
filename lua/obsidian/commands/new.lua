@@ -2,9 +2,8 @@ local api = require "obsidian.api"
 local log = require "obsidian.log"
 local Note = require "obsidian.note"
 
----@param client obsidian.Client
 ---@param data CommandArgs
-return function(client, data)
+return function(_, data)
   ---@type obsidian.Note
   local note
   if data.args:len() > 0 then

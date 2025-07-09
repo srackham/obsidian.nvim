@@ -2,9 +2,8 @@ local log = require "obsidian.log"
 local util = require "obsidian.util"
 local Note = require "obsidian.note"
 
----@param client obsidian.Client
 ---@param data CommandArgs
-return function(client, data)
+return function(_, data)
   local picker = Obsidian.picker
   if not picker then
     log.err "No picker configured"

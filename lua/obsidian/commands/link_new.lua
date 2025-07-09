@@ -2,7 +2,6 @@ local log = require "obsidian.log"
 local api = require "obsidian.api"
 local Note = require "obsidian.note"
 
----@param _ obsidian.Client deprecated client
 ---@param data CommandArgs
 return function(_, data)
   local viz = api.get_visual_selection()
