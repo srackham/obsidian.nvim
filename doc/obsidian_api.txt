@@ -273,32 +273,6 @@ Parameters ~
 {callback} `(fun(tags: string[]))`
 
 ------------------------------------------------------------------------------
-                                                 *obsidian.Client.apply_async()*
-                `Client.apply_async`({self}, {on_note}, {opts})
-Apply a function over all notes in the current vault.
-
-Parameters ~
-{on_note} `(fun(note: obsidian.Note))`
-{opts} `({ on_done: fun()|?, timeout: integer|?, pattern: string|? }|)`?
-
-Options:
- - `on_done`: A function to call when all notes have been processed.
- - `timeout`: An optional timeout.
- - `pattern`: A Lua search pattern. Defaults to ".*%.md".
-
-------------------------------------------------------------------------------
-                                             *obsidian.Client.apply_async_raw()*
-              `Client.apply_async_raw`({self}, {on_path}, {opts})
-Like apply, but the callback takes a path instead of a note instance.
-
-Parameters ~
-{on_path} `(fun(path: string))`
-{opts} `({ on_done: fun()|?, timeout: integer|?, pattern: string|? }|)`?
-
-Options:
- - `on_done`: A function to call when all paths have been processed.
-
-------------------------------------------------------------------------------
 @class obsidian.note.NoteCreationOpts
 @field notes_subdir string
 @field note_id_func fun()
