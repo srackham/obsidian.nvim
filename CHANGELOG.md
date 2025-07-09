@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - use `run_job` wrap with `bash` to run `save_clipboard_image` async for Wayland sessions to avoid data corruption.
 - Use a `Obsidian` global variable to hold the state instead of client.
 - `opts.img_text_func` has an obsidian app compatibility, and only accept one path argument.
+- Moved `client:apply_async` -> `api.dir`
 
 ### Fixed
 
