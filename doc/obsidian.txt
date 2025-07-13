@@ -1,4 +1,4 @@
-*obsidian.txt*           a plugin for writing and navigating an Obsidian vault
+*obsidian*           a plugin for writing and navigating an Obsidian vault
 
 obsidian.nvim
 A **community fork** of the Neovim plugin for writing and navigating Obsidian
